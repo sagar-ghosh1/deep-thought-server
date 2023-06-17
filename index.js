@@ -62,3 +62,13 @@ const reviewCollection = client.db("deepThought").collection("review");
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+/// jwt token
+app.post("/jwt", async (req, res) => {
+  const user = req.body;
+  // console.log(user)
+  const token = jwt.sign(user, process.env.JWT_TOKEN, {
+    expiresIn: "1d",
+  });
+  res.send({ token });
+});
