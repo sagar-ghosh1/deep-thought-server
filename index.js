@@ -32,3 +32,33 @@ const verifyToken = (req, res, next) => {
 // const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@ac-tfmdlv0-shard-00-00.rnkzyeb.mongodb.net:27017,ac-tfmdlv0-shard-00-01.rnkzyeb.mongodb.net:27017,ac-tfmdlv0-shard-00-02.rnkzyeb.mongodb.net:27017/?ssl=true&replicaSet=atlas-8cmvoo-shard-0&authSource=admin&retryWrites=true&w=majority`;
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ez7uet8.mongodb.net/?retryWrites=true&w=majority`;
 
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
+
+const dbConnect = async () => {
+  try {
+    client.connect();
+    console.log("Database Connected Successfully✅");
+  } catch (error) {
+    console.log(error.name, error.message);
+  }
+};
+dbConnect();
+
+const courseCollection = client.db("deepThought").collection("Cart");
+const userCollection = client.db("deepThought").collection("user");
+const classCollection = client.db("deepThought").collection("addClass");
+const instructorCollection = client.db("deepThought").collection("instructor");
+const paymentCollection = client.db("deepThought").collection("payment");
+const reviewCollection = client.db("deepThought").collection("review");
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
