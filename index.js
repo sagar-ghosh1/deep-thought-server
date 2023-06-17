@@ -98,3 +98,18 @@ app.get("/user", async (req, res) => {
   const result = await userCollection.find().toArray();
   res.send(result);
 });
+
+/// GET user admin
+app.get("/users/admin/:email", verifyToken, async (req, res) => {
+  const email = req.params.email;
+  const query = { email: email };
+
+  const decoded = req.decoded.email;
+  if (decoded !== email) {
+    return res.status(403).send({ admin: false });
+  }
+
+  const user = await userCollection.findOne(query);
+  const result = { admin: user?.role === "admin" };
+  res.send(result);
+});
