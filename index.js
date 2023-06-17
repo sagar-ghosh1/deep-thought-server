@@ -205,3 +205,35 @@ app.get("/course", verifyToken, async (req, res) => {
   const result = await courseCollection.find(query).toArray();
   res.send(result);
 });
+
+/// DELETE course
+app.delete("/course/:id", async (req, res) => {
+  const id = req.params.id;
+  // console.log(id)
+  const query = { _id: new ObjectId(id) };
+  const result = await courseCollection.deleteOne(query);
+  res.send(result);
+});
+
+// dashboard add class POST
+app.post("/class", async (req, res) => {
+  const body = req.body;
+  const result = await classCollection.insertOne(body);
+  res.send(result);
+});
+
+app.get("/class", async (req, res) => {
+  const email = req.query.email;
+  if (!email) {
+    return res.send([]);
+  }
+  const query = { email: email };
+  const result = await classCollection.find(query).toArray();
+  res.send(result);
+});
+
+/// all classes GET on class page
+app.get("/classes", async (req, res) => {
+  const result = await classCollection.find().toArray();
+  res.send(result);
+});
