@@ -72,3 +72,9 @@ app.post("/jwt", async (req, res) => {
   });
   res.send({ token });
 });
+
+/// top instructor section
+app.get("/top_instructor", async (req, res) => {
+  const result = await instructorCollection.find().toArray();
+  res.send(result);
+});
