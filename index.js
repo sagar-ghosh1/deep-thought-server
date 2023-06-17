@@ -78,3 +78,17 @@ app.get("/top_instructor", async (req, res) => {
   const result = await instructorCollection.find().toArray();
   res.send(result);
 });
+
+/// POST user
+app.post("/user", async (req, res) => {
+  const user = req.body;
+  console.log(user);
+  const query = { email: user.email };
+  const existingUser = await userCollection.findOne(query);
+  if (existingUser) {
+    return res.send({ message: "Already Added this user info" });
+  } else {
+    const result = await userCollection.insertOne(user);
+    res.send(result);
+  }
+});
