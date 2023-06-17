@@ -237,3 +237,73 @@ app.get("/classes", async (req, res) => {
   const result = await classCollection.find().toArray();
   res.send(result);
 });
+
+/// all instructor page get method
+app.get("/allInstructor", async (req, res) => {
+  const role = req.query.role;
+  console.log(role);
+  const query = { role: role };
+  const result = await userCollection.find(query).toArray();
+  res.send(result);
+});
+
+/// create payment intent
+app.post("/create-payment-intent", async (req, res) => {
+  const { price } = req.body;
+  // console.log(price)
+  const money = price * 100;
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: money,
+    currency: "usd",
+    payment_method_types: ["card"],
+  });
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
+
+/// POST payment create
+app.post("/payments", async (req, res) => {
+  const payment = req.body;
+  console.log(payment);
+
+  const InsertResult = await paymentCollection.insertOne(payment);
+
+  const query = { _id: new ObjectId(payment.items) };
+  const deleteResult = await courseCollection.deleteOne(query);
+
+  const updateDoc = {
+    $set: {
+      seat: parseInt(payment.seat) - 1,
+    },
+  };
+  const updateResult = await classCollection.updateOne(query, updateDoc);
+
+  res.send({ InsertResult, deleteResult, updateResult });
+});
+
+/// Get students successful payment data
+app.get("/payments", async (req, res) => {
+  const result = await paymentCollection.find().toArray();
+  res.send(result);
+});
+
+//GET payments
+app.get("/payment/:id", async (req, res) => {
+  const id = req.params.id;
+  // console.log(id)
+  const query = { _id: new ObjectId(id) };
+  const result = await courseCollection.findOne(query);
+  res.send(result);
+});
+
+// GET testimonial section section
+app.get("/review", async (req, res) => {
+  const result = await reviewCollection.find().toArray();
+  res.send(result)
+})
+
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
