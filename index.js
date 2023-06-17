@@ -170,3 +170,12 @@ app.patch("/users/instructor/:id", async (req, res) => {
   const result = await userCollection.updateOne(filter, updateDoc);
   res.send(result);
 });
+
+/// DELETE user admin
+app.delete("/users/admin/:id", async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  const query = { _id: new ObjectId(id) };
+  const result = await userCollection.deleteOne(query);
+  res.send(result);
+});
