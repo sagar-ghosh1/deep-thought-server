@@ -92,3 +92,9 @@ app.post("/user", async (req, res) => {
     res.send(result);
   }
 });
+
+// GET user
+app.get("/user", async (req, res) => {
+  const result = await userCollection.find().toArray();
+  res.send(result);
+});
