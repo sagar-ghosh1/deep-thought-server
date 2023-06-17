@@ -179,3 +179,29 @@ app.delete("/users/admin/:id", async (req, res) => {
   const result = await userCollection.deleteOne(query);
   res.send(result);
 });
+
+/// POST course
+app.post("/course", async (req, res) => {
+  const body = req.body;
+  const result = await courseCollection.insertOne(body);
+  res.send(result);
+});
+
+/// GET course email query
+app.get("/course", verifyToken, async (req, res) => {
+  const email = req.query.email;
+  console.log(email);
+
+  if (!email) {
+    return res.send([]);
+  }
+
+  const decoded = req.decoded.email;
+  if (email !== decoded) {
+    return res.status(403).send({ error: true, message: "Forbidden access" });
+  }
+
+  const query = { email: email };
+  const result = await courseCollection.find(query).toArray();
+  res.send(result);
+});
