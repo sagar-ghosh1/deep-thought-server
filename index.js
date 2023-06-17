@@ -142,3 +142,17 @@ app.get("/users/student/:email", verifyToken, async (req, res) => {
   const result = await userCollection.findOne(query);
   res.send(result);
 });
+
+/// PATCH user admin
+app.patch("/users/admin/:id", async (req, res) => {
+  const id = req.params.id;
+  // console.log(id);
+  const filter = { _id: new ObjectId(id) };
+  const updateDoc = {
+    $set: {
+      role: "admin",
+    },
+  };
+  const result = await userCollection.updateOne(filter, updateDoc);
+  res.send(result);
+});
